@@ -1,18 +1,17 @@
 name: Build and Deploy to GitHub Pages
 
-# When does this pipeline run?
-# We tell it to run whenever someone pushes code to the 'main' or 'master' branch.
+
 on:
   push:
     branches: [ "main", "master" ]
 
-# We need to give GitHub Actions permission to write to GitHub Pages
+
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# This prevents multiple deployments running at the same time and conflicting
+
 concurrency:
   group: "pages"
   cancel-in-progress: true
@@ -23,31 +22,31 @@ jobs:
     name: Build the App
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Download the code from the repository into the Action's virtual machine
-      - name: 📥 Checkout Code
+      
+      - name:  Checkout Code
         uses: actions/checkout@v4
 
-      # Step 2: Set up Node.js (required to run React/Vite)
-      - name: ⚙️ Setup Node.js
+     
+      - name:  Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
 
-      # Step 3: Install all the project dependencies
-      - name: 📦 Install Dependencies
+     
+      - name:  Install Dependencies
         run: npm ci
 
-      # Step 4: Build the final website (converts React into plain HTML/CSS/JS)
-      - name: 🔨 Build App
+     
+      - name:  Build App
         run: npm run build
 
-      # Step 5: Configure GitHub Pages
-      - name: 🛠️ Setup Pages
+     
+      - name:  Setup Pages
         uses: actions/configure-pages@v4
 
-      # Step 6: Save the output folder ('dist') so the next job can deploy it
-      - name: 💾 Upload artifact
+      
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
@@ -59,9 +58,9 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build # This tells GitHub to wait for the 'build' job to finish first
+    needs: build 
     steps:
-      # Step 1: Take the 'dist' folder we saved earlier and deploy it to GitHub Pages
+      
       - name: 🚀 Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
